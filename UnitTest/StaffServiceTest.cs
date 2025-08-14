@@ -32,6 +32,20 @@ internal class StaffServiceTest
     }
 
     [Test]
+    public void CannotAddIfGenderIsNotDefine()
+    {
+        var staffModel = new StaffModel
+        {
+            Birthday = DateTime.Today,
+            Gender = (Gender)3,
+            FullName = "Hello World",
+            StaffId = "01234567899",
+        };
+        var ex = Assert.ThrowsAsync<ValidatingException>(async () => await _staffService.Add(staffModel));
+        Assert.That(ex.Message, Is.EqualTo("Invalid Gender"));
+    }
+
+    [Test]
     public void CannotAddIfStaffIdMoreThan10()
     {
         var staffModel = new StaffModel
@@ -68,7 +82,7 @@ internal class StaffServiceTest
             StaffId = "01234",
             Birthday = DateTime.Today,
             Gender = Gender.Male,
-            FullName = "Hello World Hello World Hello World Hello World Hello World Hello World Hello World Hello World Hello World"
+            FullName = "Hello World Hello World Hello World Hello World Hello World Hello World Hello World Hello World Hello World Hello World Hello World"
         };
         var ex = Assert.ThrowsAsync<ValidatingException>(async () => await _staffService.Add(staffModel));
         Assert.That(ex.Message, Is.EqualTo("Full Name is limited 100 characters"));

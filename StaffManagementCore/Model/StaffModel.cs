@@ -32,7 +32,7 @@ public class StaffModel : ModelBase
     {
         var length = (FullName + string.Empty).Trim().Length;
         if (length == 0) return "Full Name is required";
-        if (length > 100) return "Full Name is limited 100 characters";
+        else if (length > 100) return "Full Name is limited 100 characters";
         return string.Empty;
     }
 
@@ -40,7 +40,7 @@ public class StaffModel : ModelBase
     {
         var length = (StaffId + string.Empty).Trim().Length;
         if (length == 0) return "Staff Id is required";
-        if (length > 10) return "Staff Id is limited 10 characters";
+        else if (length > 10) return "Staff Id is limited 10 characters";
         return string.Empty;
     }
 }

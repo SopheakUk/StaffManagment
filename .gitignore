@@ -15,3 +15,5 @@
 /IntegrationTest/obj
 /EndToEndTest/bin/Debug/net9.0
 /EndToEndTest/obj
+/UnitTest/coverage-report
+/UnitTest/TestResults
