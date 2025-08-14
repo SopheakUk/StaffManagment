@@ -1,22 +1,25 @@
 ﻿using Microsoft.Playwright;
 using Microsoft.Playwright.Xunit;
+using System.Security.AccessControl;
 using System.Text.RegularExpressions;
 
 namespace EndToEndTest;
 
 public class StaffTest : PageTest
 {
+    private const string _url = "http://localhost:5217/";
+
     [Fact]
     public async Task HasTitle()
     {
-        await Page.GotoAsync("https://localhost:7062/");
+        await Page.GotoAsync(_url);
         await Expect(Page).ToHaveTitleAsync(new Regex("Staff Management"));
     }
 
     [Fact]
     public async Task HasAddNew()
     {
-        await Page.GotoAsync("https://localhost:7062/");
+        await Page.GotoAsync(_url);
         var getStarted = Page.GetByRole(AriaRole.Button, new() { Name = "Add New" });
         await getStarted.ClickAsync();
         var addStaff = Page.GetByText("Add Staff");
@@ -27,7 +30,7 @@ public class StaffTest : PageTest
     [Fact]
     public async Task AddNewStaff()
     {
-        await Page.GotoAsync("https://localhost:7062/");
+        await Page.GotoAsync(_url);
 
         var addStaff = Page.GetByRole(AriaRole.Button, new() { Name = "Add New" });
         await addStaff.ClickAsync();
