@@ -12,7 +12,7 @@ Deploy Backend api => go to command line under StaffManagementAPI folder and typ
 - dotnet ef database update
 - dotnet run bin\Debuy\net9.0\StaffManagementAPI.dll
 
-Deploy Frontend => go to command line StaffManagement folder and type
+Deploy Frontend => go to command line under StaffManagement folder and type
 - dotnet build
 - dotnet run bin\Debuy\net9.0\StaffManagement.dll
 
