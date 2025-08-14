@@ -27,7 +27,7 @@ Integration Test
 	+ dotnet test
 
 End to End Test (Make sure backend and frontend are running) 
-- Install Requirement
+- Install Requirement => go to command line and type
 	+ winget install --id Microsoft.PowerShell --source winget
 - Go to command line under EndToEndTest folder and type
 	+ dotnet build
