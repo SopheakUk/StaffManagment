@@ -1,6 +1,5 @@
 ﻿using Microsoft.Playwright;
 using Microsoft.Playwright.Xunit;
-using System.Security.AccessControl;
 using System.Text.RegularExpressions;
 
 namespace EndToEndTest;
