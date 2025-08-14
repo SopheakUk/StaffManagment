@@ -2,7 +2,6 @@ Description
 This is Staff Management fullstack website backend and frontend
 
 Requirement
-
 - Install MariaDB 10.4.32 or higher
 - Install .Net Core 9.0 => https://dotnet.microsoft.com/download/dotnet
 - install ef core tool, go to command line and type
