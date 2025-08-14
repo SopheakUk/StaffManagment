@@ -1,0 +1,17 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/StaffManagement/bin/Debug/net9.0
+/StaffManagement/obj
+/StaffManagementAPI/bin/Debug/net9.0
+/StaffManagementAPI/obj
+/StaffManagementCore/obj
+/StaffManagementCore/bin/Debug/net9.0
+/UnitTest/bin/Debug/net9.0
+/UnitTest/obj
+/IntegrationTest/bin/Debug/net9.0
+/IntegrationTest/obj
+/EndToEndTest/bin/Debug/net9.0
+/EndToEndTest/obj

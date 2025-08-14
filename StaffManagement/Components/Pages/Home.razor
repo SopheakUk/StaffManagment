@@ -1,0 +1,168 @@
+﻿@page "/"
+@attribute [StreamRendering]
+@using StaffManagement.Service.Interface
+@using StaffManagementCore.Model
+@using Syncfusion.Blazor.Grids
+@inject IStaffService _staffService
+@inject IDialogService _dialogService
+
+
+@inherits PageBase
+
+@{
+    base.BuildRenderTree(__builder);
+}
+
+<PageTitle>Staff Management</PageTitle>
+
+<MudStack>
+    <h2>Staff Management</h2>
+    <MudStack Row>
+        <MudTextField @bind-Value="_staffQueryRequest.StaffId" Label="Staff Id" Placeholder="Staff Id" Variant="Variant.Text" Clearable=true></MudTextField>
+        <MudDatePicker @bind-Date="_staffQueryRequest.FromDate" Placeholder="Birthday From Date" Label="Birthday From Date" Clearable=true />
+        <MudDatePicker @bind-Date="_staffQueryRequest.ToDate" Placeholder="Birthday To Date" Label="Birthday To Date" Clearable=true />
+        <MudSelect @bind-Value="_staffQueryRequest.Gender" Variant="Variant.Text" Placeholder="Gender" Label="Gender" Clearable=true>
+            <MudSelectItem Value="(Gender?)Gender.Male">Male</MudSelectItem>
+            <MudSelectItem Value="(Gender?)Gender.Female">Female</MudSelectItem>
+        </MudSelect>
+        <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="Reload">Search</MudButton>
+        <MudSpacer></MudSpacer>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Add">Add New</MudButton>
+    </MudStack>
+
+    <SfGrid ID="Grid" @ref=_grid DataSource="@_staffs.Results" AllowExcelExport=true AllowPdfExport=true Toolbar="@(new List<string>() { "ExcelExport", "PdfExport" })">
+        <GridEvents OnToolbarClick="ToolbarClick" TValue="StaffModel"></GridEvents>
+        <GridColumns>
+            <GridColumn Field=@nameof(StaffModel.StaffId) HeaderText="Staff ID"></GridColumn>
+            <GridColumn Field=@nameof(StaffModel.FullName) HeaderText="Full Name"></GridColumn>
+            <GridColumn Field=@nameof(StaffModel.Gender) HeaderText="Gender"></GridColumn>
+            <GridColumn Field=@nameof(StaffModel.Birthday) HeaderText="Birthday" Format="dd/MM/yyyy"></GridColumn>
+            <GridColumn>
+                <Template>
+                    @{
+                        var model = (context as StaffModel);
+                    }
+                    <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="() => Edit(model)">Edit</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="() => Delete(model)">Delete</MudButton>
+                </Template>
+            </GridColumn>
+        </GridColumns>
+    </SfGrid>
+</MudStack>
+
+@code {
+    QueryResponse<StaffModel> _staffs = new();
+    StaffQueryRequest _staffQueryRequest = new();
+    SfGrid<StaffModel> _grid;
+
+    protected override void OnInitialized()
+    {
+        Reload();
+    }
+
+    public void ToolbarClick(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+    {
+        if (args.Item.Id == "Grid_pdfexport")
+        {
+            this._grid.ExportToPdfAsync();
+        }
+        else if (args.Item.Id == "Grid_excelexport")
+        {
+            this._grid.ExportToExcelAsync();
+        }
+    }
+
+    protected async void Reload()
+    {
+        try
+        {
+            _staffs = await _staffService.Query(_staffQueryRequest);
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception ex)
+        {
+            Error(ex);
+        }
+    }
+
+    async void Delete(StaffModel model)
+    {
+        if (Busy()) return;
+        try
+        {
+            var result = await _dialogService.ShowMessageBox("Question", "Are you sure to delete?", "Yes", "No");
+            if (result == true)
+            {
+                var response = await _staffService.Delete(model.Id);
+                Success(response.ResponseMessage);
+                Reload();
+            }
+        }
+        catch (Exception ex)
+        {
+            Error(ex);
+        }
+        finally
+        {
+            Free();
+        }
+    }
+
+    async void Edit(StaffModel model)
+    {
+        if (Busy()) return;
+        try
+        {
+            MudBlazor.DialogOptions options = new()
+            {
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true,
+            };
+            var parameters = new DialogParameters<EditStaff>();
+            parameters.Add(p => p.Model, model);
+            var dialog = await _dialogService.ShowAsync<EditStaff>("Edit Staff", parameters, options);
+            var result = await dialog.Result;
+
+            if (result.Canceled == false)
+            {
+                Reload();
+            }
+        }
+        catch (Exception ex)
+        {
+            Error(ex);
+        }
+        finally
+        {
+            Free();
+        }
+    }
+
+    async void Add()
+    {
+        if (Busy()) return;
+        try
+        {
+            MudBlazor.DialogOptions options = new()
+            {
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true,
+            };
+            var dialog = await _dialogService.ShowAsync<AddStaff>("Add Staff", options);
+            var result = await dialog.Result;
+
+            if (result.Canceled == false)
+            {
+                Reload();
+            }
+        }
+        catch (Exception ex)
+        {
+            Error(ex);
+        }
+        finally
+        {
+            Free();
+        }
+    }
+}

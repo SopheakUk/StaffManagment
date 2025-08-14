@@ -1,0 +1,81 @@
+﻿@using StaffManagement.Service.Interface
+@using StaffManagementCore.Model
+@inject IDialogService _dialogService
+@inherits PageBase
+@inject IStaffService _staffService
+
+@{
+    base.BuildRenderTree(__builder);
+}
+
+<MudDialog data-testid="addStaffForm">
+    <DialogContent>
+        <MudForm @ref=_form @bind-IsValid=_success ReadOnly=IsViewMode()>
+            <MudStack>
+                <MudTextField data-testid="staffId" @bind-Value="Model.StaffId" Label="Staff Id" Validation=@(new Func<string, string>(ValidStaffId)) @onblur="OnBlurChanged" MaxLength="10" Required=true RequiredError="Staff Id is required" Placeholder="Staff Id" Variant="Variant.Text"></MudTextField>
+                <MudTextField data-testid="fullName" @bind-Value="Model.FullName" Label="Full Name" Validation=@(new Func<string, string>(ValidFullName)) @onblur="OnBlurChanged" MaxLength="100" Required=true RequiredError="Full Name is required" Placeholder="Full Name" Variant="Variant.Text"></MudTextField>
+                <MudDatePicker data-testid="birthDay" @bind-Date="Model.Birthday" Required=true RequiredError="Birthday is required" Placeholder="Birthday" Label="Birthday" />
+                <MudSelect @bind-Value="Model.Gender" Variant="Variant.Text" Placeholder="Gender" Label="Gender">
+                    <MudSelectItem Value="Gender.Male">Male</MudSelectItem>
+                    <MudSelectItem Value="Gender.Female">Female</MudSelectItem>
+                </MudSelect>
+            </MudStack>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton data-testid="buttonAdd" Color="Color.Success" OnClick="Confirm">@ConfirmText</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="Close">Close</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    protected IMudDialogInstance MudDialog { get; set; }
+    protected MudForm _form;
+    protected bool _success;
+    public virtual StaffModel Model { get; set; } = new();
+    protected virtual string ConfirmText => "Add";
+
+    private void Close() => MudDialog.Cancel();
+
+    private async Task OnBlur_PageTitle()
+    {
+        await _form.Validate();
+    }
+
+    string ValidStaffId(string value) => Model.ValidStaffId();
+    string ValidFullName(string value) => Model.ValidFullName();
+
+    private async Task OnBlurChanged()
+    {
+        await _form.Validate();
+    }
+
+    protected virtual async void Confirm()
+    {
+        if (Busy()) return;
+
+        if (IsAddMode())
+        {
+            StateHasChanged();
+        }
+
+        try
+        {
+            await _form.Validate();
+            if (_success == false) return;
+            var response = await _staffService.Post(Model);
+            MudDialog.Close(DialogResult.Ok(true));
+            Success(response.ResponseMessage);
+        }
+        catch (Exception ex)
+        {
+            Error(ex);
+        }
+        finally
+        {
+            Free();
+        }
+    }
+
+}

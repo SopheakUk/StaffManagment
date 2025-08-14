@@ -1,0 +1,53 @@
+﻿@using System.Globalization
+@inject ISnackbar _snackbar
+@inject IJSRuntime _js
+@inject NavigationManager _navigator
+
+@code {
+
+	protected bool _isBusy = false;
+	public string EmptyText => "";
+	protected virtual Mode FormMode => Mode.AddMode;
+	protected bool IsAddMode() => FormMode is Mode.AddMode;
+	protected bool IsEditMode() => FormMode is Mode.EditMode;
+	protected bool IsViewMode() => FormMode is Mode.ViewMode;
+	protected bool IsAddEditMode() => FormMode is Mode.EditMode or Mode.AddMode;
+
+	protected bool Busy()
+	{
+		if (_isBusy) return true;
+		_isBusy = true;
+		return false;
+	}
+
+	protected void Free() => _isBusy = false;
+
+	protected void Error(Exception ex)
+	{
+		if (ex is NullReferenceException)
+		{
+			Error(ex.ToString());
+		}
+		else
+		{
+			Error(ex?.Message);
+		}
+	}
+
+	protected void Error(string error) => _snackbar.Add(error, Severity.Error);
+
+	protected void Info(string info) => _snackbar.Add(info, Severity.Info);
+
+	protected void Warning(string warning) => _snackbar.Add(warning, Severity.Warning);
+
+	protected void Success(string message) => _snackbar.Add(message, Severity.Success);
+
+	protected void Warning(Exception ex) => Warning(ex?.Message);
+
+	protected enum Mode
+	{
+		AddMode = 0,
+		EditMode = 1,
+		ViewMode = 2
+	}
+}
