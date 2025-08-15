@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using StaffManagementCore.Model;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
 namespace StaffManagementAPI.Filter;
 
+[ExcludeFromCodeCoverage]
 public class ExceptionFilter : ActionFilterAttribute
 {
     public override void OnActionExecuted(ActionExecutedContext context)

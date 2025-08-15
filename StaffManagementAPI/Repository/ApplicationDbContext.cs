@@ -4,9 +4,11 @@ using StaffManagementAPI.Data;
 using StaffManagementAPI.Repository.Interface;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 
 namespace StaffManagementAPI.Repository;
 
+[ExcludeFromCodeCoverage]
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options), IApplicationDbContext
 {
     protected override void OnModelCreating(ModelBuilder modelBuilder)

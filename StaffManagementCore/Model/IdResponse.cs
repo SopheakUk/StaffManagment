@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace StaffManagementCore.Model
 {
+    [ExcludeFromCodeCoverage]
     public class IdResponse : ResponseBase
     {
         public long Id { get; set; }

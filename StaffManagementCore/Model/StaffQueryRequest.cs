@@ -1,5 +1,8 @@
-﻿namespace StaffManagementCore.Model;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace StaffManagementCore.Model;
+
+[ExcludeFromCodeCoverage]
 public class StaffQueryRequest
 {
     public string StaffId { get; set; }

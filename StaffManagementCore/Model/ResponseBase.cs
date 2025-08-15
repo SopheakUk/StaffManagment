@@ -1,8 +1,10 @@
 ﻿using StaffManagementCore.Exception;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace StaffManagementCore.Model;
 
+[ExcludeFromCodeCoverage]
 public class ResponseBase
 {
     [JsonPropertyName("responseCode")]

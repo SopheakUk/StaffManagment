@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StaffManagementCore.Model;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace StaffManagementAPI.Data;
 
+[ExcludeFromCodeCoverage]
 [Index(nameof(StaffId), IsUnique = true)]
 public class Staff : EntityBase
 {
